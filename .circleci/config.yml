@@ -6,7 +6,9 @@ jobs:
   build_test_docker:
     docker:
       - image: circleci/golang:1.11.6
-      
+        environment:
+          CIRCLE_PROJECT_USERNAME: iotexproject
+          CIRCLE_PROJECT_REPONAME: iotex-address     
     working_directory: ~/go/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
     #environment:
     #  - GOPATH: "${HOME}/go"
@@ -14,21 +16,21 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache:
-          key: gopkg-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
-          paths:
-              - ~/go/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/vendor
-      - run:
-          name: "get vendor"
-          command: |
-            export GOPATH=~/go
-            if [ ! -d ~/go/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/vendor ]; then
-                dep ensure
-            fi
-      - save_cache:
-          key: gopkg-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
-          paths:
-              - ~/go/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/vendor
+        #      - restore_cache:
+        # key: gopkg-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
+        # paths:
+        #     - ~/go/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/vendor
+        #- run:
+        # name: "get vendor"
+        # command: |
+        #   export GOPATH=~/go
+        #   if [ ! -d ~/go/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/vendor ]; then
+        #       dep ensure
+        #   fi
+        #- save_cache:
+        # key: gopkg-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
+        # paths:
+        #     - ~/go/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/vendor
       - run: 
           name: go test
           command: |
