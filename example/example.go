@@ -1,4 +1,4 @@
-package main
+package example
 
 // This example demos how to convert an Ethereum address to an IoTeX address.
 
