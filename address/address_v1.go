@@ -7,9 +7,10 @@
 package address
 
 import (
-	"github.com/pkg/errors"
+	"log"
 
 	"github.com/iotexproject/go-pkgs/hash"
+	"github.com/pkg/errors"
 
 	"github.com/iotexproject/iotex-address/address/bech32"
 )
@@ -69,12 +70,12 @@ func (addr *AddrV1) String() string {
 	// Group the payload into 5 bit groups.
 	grouped, err := bech32.ConvertBits(payload, 8, 5, true)
 	if err != nil {
-		panic("Error when grouping the payload into 5 bit groups." + err.Error())
+		log.Panic("Error when grouping the payload into 5 bit groups." + err.Error())
 		return ""
 	}
 	encodedAddr, err := bech32.Encode(prefix(), grouped)
 	if err != nil {
-		panic("Error when encoding bytes into a base32 string." + err.Error())
+		log.Panic("Error when encoding bytes into a base32 string." + err.Error())
 		return ""
 	}
 	return encodedAddr

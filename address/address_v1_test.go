@@ -11,10 +11,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/iotexproject/go-pkgs/crypto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/iotexproject/go-pkgs/crypto"
 )
 
 func TestAddress(t *testing.T) {
