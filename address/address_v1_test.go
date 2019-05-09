@@ -11,8 +11,8 @@ import (
 	"strings"
 	"testing"
 
+	ether "github.com/ethereum/go-ethereum/crypto"
 	"github.com/iotexproject/go-pkgs/crypto"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -24,7 +24,7 @@ func TestAddress(t *testing.T) {
 		pkHash := sk.PublicKey().Hash()
 		addr1, err := _v1.FromBytes(pkHash)
 		require.NoError(t, err)
-		assert.Equal(t, pkHash, addr1.Bytes())
+		require.Equal(t, pkHash, addr1.Bytes())
 
 		encodedAddr := addr1.String()
 		if isTestNet {
@@ -34,13 +34,13 @@ func TestAddress(t *testing.T) {
 		}
 		addr2, err := _v1.FromString(encodedAddr)
 		require.NoError(t, err)
-		assert.Equal(t, pkHash[:], addr2.Bytes())
+		require.Equal(t, pkHash[:], addr2.Bytes())
 
 		addrBytes := addr1.Bytes()
 		require.Equal(t, _v1.AddressLength, len(addrBytes))
 		addr3, err := _v1.FromBytes(addrBytes)
 		require.NoError(t, err)
-		assert.Equal(t, pkHash[:], addr3.Bytes())
+		require.Equal(t, pkHash[:], addr3.Bytes())
 	}
 	t.Run("testnet", func(t *testing.T) {
 		require.NoError(t, os.Setenv("IOTEX_NETWORK_TYPE", "testnet"))
@@ -65,6 +65,35 @@ func TestAddressError(t *testing.T) {
 	encodedAddrBytes := []byte(encodedAddr)
 	encodedAddrBytes[len(encodedAddrBytes)-1] = 'o'
 	addr2, err := _v1.FromString(string(encodedAddrBytes))
-	assert.Nil(t, addr2)
-	assert.Error(t, err)
+	require.Nil(t, addr2)
+	require.Error(t, err)
+}
+
+func TestEtherCompatibility(t *testing.T) {
+	require := require.New(t)
+
+	sk, err := crypto.GenerateKey()
+	require.NoError(err)
+	ethAddr := ether.PubkeyToAddress(*sk.PublicKey().EcdsaPublicKey())
+	addr, err := FromBytes(sk.PublicKey().Hash())
+	require.NoError(err)
+	require.Equal(ethAddr.Bytes(), addr.Bytes())
+}
+
+func TestSpecialAddress(t *testing.T) {
+	require := require.New(t)
+
+	addr1, err := _v1.FromBytes(StakingProtocolAddrHash[:])
+	require.NoError(err)
+
+	// special address has same length
+	length := len(addr1.String())
+	require.Equal(length, len(StakingBucketPoolAddr))
+	require.Equal(length, len(RewardingPoolAddr))
+
+	// but cannot decode
+	addr1, err = _v1.FromString(StakingBucketPoolAddr)
+	require.Error(err)
+	addr1, err = _v1.FromString(RewardingPoolAddr)
+	require.Error(err)
 }
