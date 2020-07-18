@@ -15,12 +15,6 @@ import (
 	"github.com/iotexproject/iotex-address/address/bech32"
 )
 
-// special rewarding/staking pool address
-const (
-	StakingBucketPoolAddr = "io000000000000000000000000stakingprotocol"
-	RewardingPoolAddr     = "io0000000000000000000000rewardingprotocol"
-)
-
 // _v1 is a singleton and defines V1 address metadata
 var _v1 = v1{
 	AddressLength: 20,

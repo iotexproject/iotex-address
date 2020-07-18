@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	ether "github.com/ethereum/go-ethereum/crypto"
+	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/iotexproject/go-pkgs/crypto"
 	"github.com/stretchr/testify/require"
 )
@@ -74,7 +74,7 @@ func TestEtherCompatibility(t *testing.T) {
 
 	sk, err := crypto.GenerateKey()
 	require.NoError(err)
-	ethAddr := ether.PubkeyToAddress(*sk.PublicKey().EcdsaPublicKey())
+	ethAddr := ethcrypto.PubkeyToAddress(*sk.PublicKey().EcdsaPublicKey())
 	addr, err := FromBytes(sk.PublicKey().Hash())
 	require.NoError(err)
 	require.Equal(ethAddr.Bytes(), addr.Bytes())
