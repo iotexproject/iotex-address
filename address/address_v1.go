@@ -20,6 +20,12 @@ var _v1 = v1{
 	AddressLength: 20,
 }
 
+// 20-byte protocol address hash
+var (
+	StakingProtocolAddrHash   = hash.Hash160b([]byte("staking"))
+	RewardingProtocolAddrHash = hash.Hash160b([]byte("rewarding"))
+)
+
 type v1 struct {
 	// AddressLength indicates the byte length of an address
 	AddressLength int

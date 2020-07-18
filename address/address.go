@@ -25,8 +25,14 @@ const (
 	// TestnetPrefix is the prefix added to the human readable address of testnet
 	TestnetPrefix = "it"
 
-        // ZeroAddress is the IoTeX address whose hash160 is all zero
+	// ZeroAddress is the IoTeX address whose hash160 is all zero
 	ZeroAddress = "io1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqd39ym7"
+
+	// StakingBucketPoolAddr is the staking bucket pool address
+	StakingBucketPoolAddr = "io000000000000000000000000stakingprotocol"
+
+	// RewardingPoolAddr is the rewarding pool address
+	RewardingPoolAddr = "io0000000000000000000000rewardingprotocol"
 )
 
 // ErrInvalidAddr indicates the invalid address error
