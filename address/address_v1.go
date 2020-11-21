@@ -7,6 +7,7 @@
 package address
 
 import (
+	"encoding/hex"
 	"log"
 
 	"github.com/pkg/errors"
@@ -43,6 +44,21 @@ func (v *v1) FromBytes(bytes []byte) (*AddrV1, error) {
 	return addr, nil
 }
 
+// FromHex converts a hex-encoded string into an address struct
+func (v *v1) FromHex(s string) (*AddrV1, error) {
+	if len(s) > 1 {
+		if s[:2] == "0x" || s[:2] == "0X" {
+			s = s[2:]
+		}
+	}
+
+	bytes, err := hex.DecodeString(s)
+	if err != nil {
+		return nil, err
+	}
+	return v.FromBytes(bytes)
+}
+
 func (v *v1) decodeBech32(encodedAddr string) ([]byte, error) {
 	hrp, grouped, err := bech32.Decode(encodedAddr)
 	if hrp != prefix() {
@@ -56,8 +72,8 @@ func (v *v1) decodeBech32(encodedAddr string) ([]byte, error) {
 	return payload, nil
 }
 
-// AddrV1 is V1 address format to be used on IoTeX blockchain and subchains. It is composed of
-// 20 bytes: hash derived from the the public key:
+// AddrV1 is V1 address format to be used on IoTeX blockchain and subchains
+// It is composed of a 20-byte hash derived from the the public key
 type AddrV1 struct {
 	payload Hash160
 }
@@ -83,4 +99,9 @@ func (addr *AddrV1) String() string {
 // Bytes converts an address struct into a byte array
 func (addr *AddrV1) Bytes() []byte {
 	return addr.payload[:]
+}
+
+// Hex is the hex-encoding of Bytes, prefixed with "0x"
+func (addr *AddrV1) Hex() string {
+	return "0x" + hex.EncodeToString(addr.payload[:])
 }

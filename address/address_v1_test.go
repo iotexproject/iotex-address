@@ -28,7 +28,7 @@ func TestAddress(t *testing.T) {
 		require.NoError(err)
 		require.Equal(_v1.AddressLength, n)
 
-		addr1, err := _v1.FromBytes(pkHash)
+		addr1, err := FromBytes(pkHash)
 		require.NoError(err)
 		require.Equal(pkHash, addr1.Bytes())
 
@@ -38,15 +38,18 @@ func TestAddress(t *testing.T) {
 		} else {
 			require.True(strings.HasPrefix(encodedAddr, MainnetPrefix))
 		}
-		addr2, err := _v1.FromString(encodedAddr)
+		addr2, err := FromString(encodedAddr)
 		require.NoError(err)
-		require.Equal(pkHash[:], addr2.Bytes())
+		require.True(Equal(addr1, addr2))
 
-		addrBytes := addr1.Bytes()
-		require.Equal(_v1.AddressLength, len(addrBytes))
-		addr3, err := _v1.FromBytes(addrBytes)
+		addrHex := addr2.Hex()
+		require.Equal(42, len(addrHex))
+		require.Equal("0x", addrHex[:2])
+		addr2, err = FromHex(addrHex)
 		require.NoError(err)
-		require.Equal(pkHash[:], addr3.Bytes())
+		require.True(Equal(addr1, addr2))
+		_, err = FromHex(addrHex[:len(addrHex)-2])
+		require.Error(err)
 	}
 	t.Run("testnet", func(t *testing.T) {
 		require.NoError(os.Setenv("IOTEX_NETWORK_TYPE", "testnet"))
