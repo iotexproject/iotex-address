@@ -9,7 +9,6 @@ package address
 import (
 	"log"
 
-	"github.com/iotexproject/go-pkgs/hash"
 	"github.com/pkg/errors"
 
 	"github.com/iotexproject/iotex-address/address/bech32"
@@ -19,12 +18,6 @@ import (
 var _v1 = v1{
 	AddressLength: 20,
 }
-
-// 20-byte protocol address hash
-var (
-	StakingProtocolAddrHash   = hash.Hash160b([]byte("staking"))
-	RewardingProtocolAddrHash = hash.Hash160b([]byte("rewarding"))
-)
 
 type v1 struct {
 	// AddressLength indicates the byte length of an address
@@ -45,9 +38,9 @@ func (v *v1) FromBytes(bytes []byte) (*AddrV1, error) {
 	if len(bytes) != v.AddressLength {
 		return nil, errors.Wrapf(ErrInvalidAddr, "invalid address length in bytes: %d", len(bytes))
 	}
-	return &AddrV1{
-		payload: hash.BytesToHash160(bytes),
-	}, nil
+	addr := &AddrV1{}
+	copy(addr.payload[:], bytes)
+	return addr, nil
 }
 
 func (v *v1) decodeBech32(encodedAddr string) ([]byte, error) {
@@ -66,7 +59,7 @@ func (v *v1) decodeBech32(encodedAddr string) ([]byte, error) {
 // AddrV1 is V1 address format to be used on IoTeX blockchain and subchains. It is composed of
 // 20 bytes: hash derived from the the public key:
 type AddrV1 struct {
-	payload hash.Hash160
+	payload Hash160
 }
 
 // String encodes an address struct into a a String encoded address string
