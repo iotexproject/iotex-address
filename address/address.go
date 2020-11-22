@@ -33,11 +33,14 @@ var isTestNet bool
 
 // Address defines the interface of the blockchain address
 type Address interface {
-	// String encodes the whole address into an address string encoded in string format
+	// String encodes the address into a string using bech32 encoding
 	String() string
-	// Bytes serializes the whole address struct into a byte slice, which is composed of the payload to identify an
-	// address within one blockchain
+
+	// Bytes returns the underlying 20-byte public key hash
 	Bytes() []byte
+
+	// Hex is the hex-encoding of Bytes, prefixed with "0x"
+	Hex() string
 }
 
 // FromString decodes an encoded address string into an address struct
@@ -45,6 +48,9 @@ func FromString(encodedAddr string) (Address, error) { return _v1.FromString(enc
 
 // FromBytes converts a byte array into an address struct
 func FromBytes(bytes []byte) (Address, error) { return _v1.FromBytes(bytes) }
+
+// FromHex converts a hex-encoded string into an address struct
+func FromHex(s string) (Address, error) { return _v1.FromHex(s) }
 
 // prefix returns the current prefix
 func prefix() string {
