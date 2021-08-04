@@ -83,21 +83,30 @@ func TestAddressError(t *testing.T) {
 func TestSpecialAddress(t *testing.T) {
 	require := require.New(t)
 
-	addr1, err := _v1.FromBytes(StakingProtocolAddrHash[:])
-	require.NoError(err)
-	require.Equal("io1qnpz47hx5q6r3w876axtrn6yz95d70cjl35r53", addr1.String())
-	addr1, err = _v1.FromBytes(RewardingProtocolAddrHash[:])
-	require.NoError(err)
-	require.Equal("io154mvzs09vkgn0hw6gg3ayzw5w39jzp47f8py9v", addr1.String())
+	tests := []struct {
+		specialAddr string
+		hashByte    Hash160
+		hash        string
+	}{
+		{StakingBucketPoolAddr, StakingProtocolAddrHash, "io1qnpz47hx5q6r3w876axtrn6yz95d70cjl35r53"},
+		{StakingCreateAddr, StakingCreateAddrHash, "io16tmc6yd9kn0z90axeack8r0sd9dsr0p8lve54d"},
+		{StakingAddDepositAddr, StakingAddDepositAddrHash, "io1l08h9492aphd5p7e6mc22e352dwpc62qwj43za"},
+		{StakingChangeCandidateAddr, StakingChangeCandidateAddrHash, "io1332snsr9jnpdlsmhprmxsktdq6q3a3yh0wu8uf"},
+		{StakingUnstakeAddr, StakingUnstakeAddrHash, "io1mdr5s62d0pww8pn0zjx4xne7u34z66ml53du45"},
+		{StakingWithdrawAddr, StakingWithdrawAddrHash, "io1sa8nv8s0u4h0ngvhavl0lzqnrq88a6dymkuxv7"},
+		{StakingRestakeAddr, StakingRestakeAddrHash, "io1fg8hwmdgkm4ytrx4p7mlx0sak0wmq6az96lnlk"},
+		{StakingTransferStakeAddr, StakingTransferStakeAddrHash, "io12v9rhxl8xr0neh9x2uwyu5xhyl043048ctdhs7"},
+		{StakingCandidateRegisterAddr, StakingCandidateRegisterAddrHash, "io1yrwqura2ww2gt00gmf79jdkuh8hq0kufufdsss"},
+		{StakingCandidateUpdateAddr, StakingCandidateUpdateAddrHash, "io15q33lxah8u5g97nh02r5x3c2x22pj5p0zavtd3"},
+		{RewardingPoolAddr, RewardingProtocolAddrHash, "io154mvzs09vkgn0hw6gg3ayzw5w39jzp47f8py9v"},
+	}
+	const ADDRLENGTH int = 41
 
-	// special address has same length
-	length := len(addr1.String())
-	require.Equal(length, len(StakingBucketPoolAddr))
-	require.Equal(length, len(RewardingPoolAddr))
-
-	// but cannot decode
-	addr1, err = _v1.FromString(StakingBucketPoolAddr)
-	require.Error(err)
-	addr1, err = _v1.FromString(RewardingPoolAddr)
-	require.Error(err)
+	for _, test := range tests {
+		require.Equal(ADDRLENGTH, len(test.specialAddr))
+		_, err := _v1.FromString(test.specialAddr)
+		require.Error(err)
+		addr, _ := _v1.FromBytes(test.hashByte[:])
+		require.Equal(test.hash, addr.String())
+	}
 }
