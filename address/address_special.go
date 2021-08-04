@@ -9,50 +9,23 @@ const (
 	// StakingBucketPoolAddr is the staking bucket pool address
 	StakingBucketPoolAddr = "io000000000000000000000000stakingprotocol"
 
-	// StakingCreateAddr is the special address for staking create actions
-	StakingCreateAddr = "io000000000000000000000000web3stakecreate"
-
-	// StakingAddDepositAddr is the special address for staking add deposit actions
-	StakingAddDepositAddr = "io00000000000000000000web3stakeadddeposit"
-
-	// StakingChangeCandidateAddr is the special address for staking change candidate actions
-	StakingChangeCandidateAddr = "io000000000000000web3stakechangecandidate"
-
-	// StakingUnstakeAddr is the special address for staking unstake actions
-	StakingUnstakeAddr = "io00000000000000000000000web3stakeunstake"
-
-	// StakingWithdrawAddr is the special address for staking withdraw actions
-	StakingWithdrawAddr = "io0000000000000000000000web3stakewithdraw"
-
-	// StakingRestakeAddr is the special address for staking restake actions
-	StakingRestakeAddr = "io00000000000000000000000web3stakerestake"
-
-	// StakingTransferStakeAddr is the special address for staking transfer stake actions
-	StakingTransferStakeAddr = "io00000000000000000web3staketransferstake"
-
-	// StakingCandidateRegisterAddr is the special address for staking candidate register actions
-	StakingCandidateRegisterAddr = "io0000000000000web3stakecandidateregister"
-
-	// StakingCandidateUpdateAddr is the special address for staking candidate update actions
-	StakingCandidateUpdateAddr = "io000000000000000web3stakecandidateupdate"
-
 	// RewardingPoolAddr is the rewarding pool address
 	RewardingPoolAddr = "io0000000000000000000000rewardingprotocol"
 )
 
 // 20-byte protocol address hash
 var (
-	StakingProtocolAddrHash          = hash160b([]byte("staking"))
-	RewardingProtocolAddrHash        = hash160b([]byte("rewarding"))
-	StakingCreateAddrHash            = hash160b([]byte("stakingCreate"))
-	StakingAddDepositAddrHash        = hash160b([]byte("stakingAddDeposit"))
-	StakingChangeCandidateAddrHash   = hash160b([]byte("stakingChangeCandidate"))
-	StakingUnstakeAddrHash           = hash160b([]byte("stakingUnstake"))
-	StakingWithdrawAddrHash          = hash160b([]byte("stakingWithdraw"))
-	StakingRestakeAddrHash           = hash160b([]byte("stakingRestake"))
-	StakingTransferStakeAddrHash     = hash160b([]byte("stakingTransferStake"))
-	StakingCandidateRegisterAddrHash = hash160b([]byte("stakingCandidateRegister"))
-	StakingCandidateUpdateAddrHash   = hash160b([]byte("stakingCandidateUpdate"))
+	StakingProtocolAddrHash     = hash160b([]byte("staking"))
+	RewardingProtocolAddrHash   = hash160b([]byte("rewarding"))
+	StakingCreateAddrHash       = bytesToHash160([]byte("stakingCreate"))
+	StakingAddDepositAddrHash   = bytesToHash160([]byte("stakingAddDeposit"))
+	StakingChangeCandAddrHash   = bytesToHash160([]byte("stakingChangeCand"))
+	StakingUnstakeAddrHash      = bytesToHash160([]byte("stakingUnstake"))
+	StakingWithdrawAddrHash     = bytesToHash160([]byte("stakingWithdraw"))
+	StakingRestakeAddrHash      = bytesToHash160([]byte("stakingRestake"))
+	StakingTransferAddrHash     = bytesToHash160([]byte("stakingTransfer"))
+	StakingRegisterCandAddrHash = bytesToHash160([]byte("stakingRegisterCand"))
+	StakingUpdateCandAddrHash   = bytesToHash160([]byte("stakingUpdateCand"))
 )
 
 type (
@@ -68,4 +41,14 @@ func hash160b(input []byte) Hash160 {
 	var hash Hash160
 	copy(hash[:], hasher.Sum(nil)[12:])
 	return hash
+}
+
+// bytesToHash160 copies the byte slice into hash
+func bytesToHash160(b []byte) Hash160 {
+	var h Hash160
+	if len(b) > 20 {
+		b = b[len(b)-20:]
+	}
+	copy(h[20-len(b):], b)
+	return h
 }
