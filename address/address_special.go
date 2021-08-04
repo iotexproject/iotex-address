@@ -12,16 +12,19 @@ const (
 	// StakingCreateAddr is the special address for staking create actions
 	StakingCreateAddr = "io000000000000000000000000web3stakecreate"
 
-	// StakingAddDepositActionAddr is the special address for staking add deposit actions
+	// StakingAddDepositAddr is the special address for staking add deposit actions
 	StakingAddDepositAddr = "io00000000000000000000web3stakeadddeposit"
 
-	// StakingChangeCandidateActionAddr is the special address for staking change candidate actions
+	// StakingChangeCandidateAddr is the special address for staking change candidate actions
 	StakingChangeCandidateAddr = "io000000000000000web3stakechangecandidate"
 
-	// StakingReclaimActionAddr is the special address for staking reclaim actions
+	// StakingUnstakeAddr is the special address for staking unstake actions
 	StakingUnstakeAddr = "io00000000000000000000000web3stakeunstake"
 
-	// StakingRestakeActionAddr is the special address for staking restake actions
+	// StakingWithdrawAddr is the special address for staking withdraw actions
+	StakingWithdrawAddr = "io0000000000000000000000web3stakewithdraw"
+
+	// StakingRestakeAddr is the special address for staking restake actions
 	StakingRestakeAddr = "io00000000000000000000000web3stakerestake"
 
 	// StakingTransferStakeAddr is the special address for staking transfer stake actions
@@ -45,6 +48,7 @@ var (
 	StakingAddDepositAddrHash        = hash160b([]byte("stakingAddDeposit"))
 	StakingChangeCandidateAddrHash   = hash160b([]byte("stakingChangeCandidate"))
 	StakingUnstakeAddrHash           = hash160b([]byte("stakingUnstake"))
+	StakingWithdrawAddrHash          = hash160b([]byte("stakingWithdraw"))
 	StakingRestakeAddrHash           = hash160b([]byte("stakingRestake"))
 	StakingTransferStakeAddrHash     = hash160b([]byte("stakingTransferStake"))
 	StakingCandidateRegisterAddrHash = hash160b([]byte("stakingCandidateRegister"))
