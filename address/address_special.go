@@ -15,8 +15,17 @@ const (
 
 // 20-byte protocol address hash
 var (
-	StakingProtocolAddrHash   = hash160b([]byte("staking"))
-	RewardingProtocolAddrHash = hash160b([]byte("rewarding"))
+	StakingProtocolAddrHash     = hash160b([]byte("staking"))
+	RewardingProtocolAddrHash   = hash160b([]byte("rewarding"))
+	StakingCreateAddrHash       = bytesToHash160([]byte("stakingCreate"))
+	StakingAddDepositAddrHash   = bytesToHash160([]byte("stakingAddDeposit"))
+	StakingChangeCandAddrHash   = bytesToHash160([]byte("stakingChangeCand"))
+	StakingUnstakeAddrHash      = bytesToHash160([]byte("stakingUnstake"))
+	StakingWithdrawAddrHash     = bytesToHash160([]byte("stakingWithdraw"))
+	StakingRestakeAddrHash      = bytesToHash160([]byte("stakingRestake"))
+	StakingTransferAddrHash     = bytesToHash160([]byte("stakingTransfer"))
+	StakingRegisterCandAddrHash = bytesToHash160([]byte("stakingRegisterCand"))
+	StakingUpdateCandAddrHash   = bytesToHash160([]byte("stakingUpdateCand"))
 )
 
 type (
@@ -32,4 +41,14 @@ func hash160b(input []byte) Hash160 {
 	var hash Hash160
 	copy(hash[:], hasher.Sum(nil)[12:])
 	return hash
+}
+
+// bytesToHash160 copies the byte slice into hash
+func bytesToHash160(b []byte) Hash160 {
+	var h Hash160
+	if len(b) > 20 {
+		b = b[len(b)-20:]
+	}
+	copy(h[20-len(b):], b)
+	return h
 }
