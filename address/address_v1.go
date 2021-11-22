@@ -26,7 +26,10 @@ type v1 struct {
 }
 
 // FromString decodes an encoded address string into an address struct
-func (v *v1) FromString(encodedAddr string) (*AddrV1, error) {
+func (v *v1) FromString(encodedAddr string) (Address, error) {
+	if IsAddrV1Special(encodedAddr) {
+		return newAddrV1Special(encodedAddr), nil
+	}
 	payload, err := v.decodeBech32(encodedAddr)
 	if err != nil {
 		return nil, err
@@ -35,23 +38,27 @@ func (v *v1) FromString(encodedAddr string) (*AddrV1, error) {
 }
 
 // FromBytes converts a byte array into an address struct
-func (v *v1) FromBytes(bytes []byte) (*AddrV1, error) {
-	if len(bytes) != v.AddressLength {
-		return nil, errors.Wrapf(ErrInvalidAddr, "invalid address length in bytes: %d", len(bytes))
+// If b is larger than v.AddressLength, b will be cropped from the left
+// otherwise, b will be left-padded with 0
+func (v *v1) FromBytes(b []byte) (Address, error) {
+	if len(b) > v.AddressLength {
+		b = b[len(b)-v.AddressLength:]
 	}
-	addr := &AddrV1{}
-	copy(addr.payload[:], bytes)
-	return addr, nil
+	addr := AddrV1{}
+	copy(addr.payload[v.AddressLength-len(b):], b)
+	return &addr, nil
 }
 
 // FromHex converts a hex-encoded string into an address struct
-func (v *v1) FromHex(s string) (*AddrV1, error) {
+func (v *v1) FromHex(s string) (Address, error) {
 	if len(s) > 1 {
-		if s[:2] == "0x" || s[:2] == "0X" {
+		if s[0] == '0' && (s[1] == 'x' || s[1] == 'X') {
 			s = s[2:]
 		}
 	}
-
+	if len(s)%2 == 1 {
+		s = "0" + s
+	}
 	bytes, err := hex.DecodeString(s)
 	if err != nil {
 		return nil, err
@@ -72,11 +79,16 @@ func (v *v1) decodeBech32(encodedAddr string) ([]byte, error) {
 	return payload, nil
 }
 
-// AddrV1 is V1 address format to be used on IoTeX blockchain and subchains
-// It is composed of a 20-byte hash derived from the the public key
-type AddrV1 struct {
-	payload Hash160
-}
+type (
+	// Hash160 for 160-bit hash used for account and smart contract address
+	Hash160 [20]byte
+
+	// AddrV1 is V1 address format to be used on IoTeX blockchain and subchains
+	// It is composed of a 20-byte hash derived from the the public key
+	AddrV1 struct {
+		payload Hash160
+	}
+)
 
 // String encodes an address struct into a a String encoded address string
 // The encoded address string will start with "io" for mainnet, and with "it" for testnet
