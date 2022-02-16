@@ -113,15 +113,6 @@ func TestSpecialAddress(t *testing.T) {
 		{Hash160{}, ZeroAddress},
 		{StakingProtocolAddrHash, StakingProtocolAddr},
 		{RewardingProtocolAddrHash, RewardingProtocol},
-		{StakingCreateAddrHash, StakingCreateAddr},
-		{StakingAddDepositAddrHash, StakingAddDepositAddr},
-		{StakingChangeCandAddrHash, StakingChangeCandAddr},
-		{StakingUnstakeAddrHash, StakingUnstakeAddr},
-		{StakingWithdrawAddrHash, StakingWithdrawAddr},
-		{StakingRestakeAddrHash, StakingRestakeAddr},
-		{StakingTransferAddrHash, StakingTransferAddr},
-		{StakingRegisterCandAddrHash, StakingRegisterCandAddr},
-		{StakingUpdateCandAddrHash, StakingUpdateCandAddr},
 	}
 	for _, test := range tests {
 		require.False(IsAddrV1Special(test.addr))

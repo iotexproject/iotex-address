@@ -17,48 +17,12 @@ const (
 
 	// RewardingProtocol is the rewarding protocol address
 	RewardingProtocol = "io154mvzs09vkgn0hw6gg3ayzw5w39jzp47f8py9v"
-
-	// StakingCreateAddr is the staking create address
-	StakingCreateAddr = "io1qqqqqqqqqqq8xarpdd5kue6rwfjkzar9k0wk6t"
-
-	// StakingAddDepositAddr is the staking add deposit address
-	StakingAddDepositAddr = "io1qqqqqum5v94kjmn8g9jxg3r9wphhx6t58x7tye"
-
-	// StakingChangeCandAddr is the staking change candidate address
-	StakingChangeCandAddr = "io1qqqqqum5v94kjmn8gd5xzmn8v4pkzmnye5v3fh"
-
-	// StakingUnstakeAddr is the staking unstake address
-	StakingUnstakeAddr = "io1qqqqqqqqqpehgcttd9hxw4twwd6xz6m9pl4r27"
-
-	// StakingWithdrawAddr is the staking withdraw address
-	StakingWithdrawAddr = "io1qqqqqqqqwd6xz6mfden4w6t5dpj8ycthwsq5ng"
-
-	// StakingRestakeAddr is the staking restake address
-	StakingRestakeAddr = "io1qqqqqqqqqpehgcttd9hxw5n9wd6xz6m995w4zm"
-
-	// StakingTransferAddr is the staking transfer address
-	StakingTransferAddr = "io1qqqqqqqqwd6xz6mfden4gunpdeekvetjzwh99y"
-
-	// StakingRegisterCandAddr is the staking register candidate address
-	StakingRegisterCandAddr = "io1qpehgcttd9hxw5n9va5hxar9wfpkzmnyahxhjk"
-
-	// StakingUpdateCandAddr is the staking update candidate address
-	StakingUpdateCandAddr = "io1qqqqqum5v94kjmn824cxgct5v4pkzmnyxxj98n"
 )
 
 // 20-byte protocol address hash
 var (
-	StakingProtocolAddrHash     = hash160b([]byte("staking"))
-	RewardingProtocolAddrHash   = hash160b([]byte("rewarding"))
-	StakingCreateAddrHash       = bytesToHash160([]byte("stakingCreate"))
-	StakingAddDepositAddrHash   = bytesToHash160([]byte("stakingAddDeposit"))
-	StakingChangeCandAddrHash   = bytesToHash160([]byte("stakingChangeCand"))
-	StakingUnstakeAddrHash      = bytesToHash160([]byte("stakingUnstake"))
-	StakingWithdrawAddrHash     = bytesToHash160([]byte("stakingWithdraw"))
-	StakingRestakeAddrHash      = bytesToHash160([]byte("stakingRestake"))
-	StakingTransferAddrHash     = bytesToHash160([]byte("stakingTransfer"))
-	StakingRegisterCandAddrHash = bytesToHash160([]byte("stakingRegisterCand"))
-	StakingUpdateCandAddrHash   = bytesToHash160([]byte("stakingUpdateCand"))
+	StakingProtocolAddrHash   = hash160b([]byte("staking"))
+	RewardingProtocolAddrHash = hash160b([]byte("rewarding"))
 )
 
 // hash160b returns 160-bit (20-byte) hash of input
