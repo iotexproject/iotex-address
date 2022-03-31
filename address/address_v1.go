@@ -15,6 +15,9 @@ import (
 	"github.com/iotexproject/iotex-address/address/bech32"
 )
 
+// V1AddressStringLength is the length of v1 address string
+const V1AddressStringLength = 41
+
 // _v1 is a singleton and defines V1 address metadata
 var _v1 = v1{
 	AddressLength: 20,
@@ -31,6 +34,18 @@ func (v *v1) FromString(encodedAddr string) (Address, error) {
 		return newAddrV1Special(encodedAddr), nil
 	}
 	payload, err := v.decodeBech32(encodedAddr)
+	if err != nil {
+		return nil, err
+	}
+	return v.FromBytes(payload)
+}
+
+// FromStringLeacy decodes an encoded address string into an address struct
+func (v *v1) FromStringLegacy(encodedAddr string) (Address, error) {
+	if IsAddrV1Special(encodedAddr) {
+		return newAddrV1Special(encodedAddr), nil
+	}
+	payload, err := v.decodeBech32Legacy(encodedAddr)
 	if err != nil {
 		return nil, err
 	}
@@ -67,6 +82,25 @@ func (v *v1) FromHex(s string) (Address, error) {
 }
 
 func (v *v1) decodeBech32(encodedAddr string) ([]byte, error) {
+	if len(encodedAddr) != V1AddressStringLength {
+		return nil, errors.Wrapf(ErrInvalidAddr, "address length = %d, expecting 41", len(encodedAddr))
+	}
+	hrp, grouped, err := bech32.Decode(encodedAddr)
+	if err != nil {
+		return nil, errors.Wrapf(ErrInvalidAddr, err.Error())
+	}
+	if hrp != prefix() {
+		return nil, errors.Wrapf(ErrInvalidAddr, "hrp %s and address prefix %s don't match", hrp, prefix())
+	}
+	// Group the payload into 8 bit groups.
+	payload, err := bech32.ConvertBits(grouped, 5, 8, false)
+	if err != nil {
+		return nil, errors.Wrapf(ErrInvalidAddr, err.Error())
+	}
+	return payload, nil
+}
+
+func (v *v1) decodeBech32Legacy(encodedAddr string) ([]byte, error) {
 	hrp, grouped, err := bech32.Decode(encodedAddr)
 	if hrp != prefix() {
 		return nil, errors.Wrapf(err, "hrp %s and address prefix %s don't match", hrp, prefix())
