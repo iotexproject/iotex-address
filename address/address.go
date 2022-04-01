@@ -46,6 +46,9 @@ type Address interface {
 // FromString decodes an encoded address string into an address struct
 func FromString(encodedAddr string) (Address, error) { return _v1.FromString(encodedAddr) }
 
+// FromStringLegacy decodes an encoded address string into an address struct
+func FromStringLegacy(encodedAddr string) (Address, error) { return _v1.FromStringLegacy(encodedAddr) }
+
 // FromBytes converts a byte array into an address struct
 func FromBytes(bytes []byte) (Address, error) { return _v1.FromBytes(bytes) }
 

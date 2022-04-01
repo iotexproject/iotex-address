@@ -122,3 +122,66 @@ func TestSpecialAddress(t *testing.T) {
 		require.Equal(test.hashByte[:], addr.Bytes())
 	}
 }
+
+func TestLegacyFormat(t *testing.T) {
+	r := require.New(t)
+
+	var success = 0
+	for _, v := range []struct {
+		addr           string
+		errLegacy, err string
+		nominal        string
+	}{
+		{"iota1qp3mxh8gx8fkqmss9c6jsm979wuv6qpm0waw6vhxt0dwzze8xxzkqzy3lxu", // wrong hrp, wrong checksum, long size
+			"checksum failed: Expected anqr4d", "address length = 64",
+			""},
+		{"iota1qp3mxh8gx8fkqmss9c6jsm979wuv6qpm0waw6vhxt0dwzze8xxzkqanqr4d", // wrong hrp, right checksum, long size
+			"", "address length = 64",
+			ZeroAddress},
+		{"iota1qp3mxh8gx8fkqmss9c6jsm979wuv6qpm0w", // wrong hrp, wrong checksum, short size
+			"checksum failed: Expected 5a73lu", "address length = 39",
+			""},
+		{"iota1qp3mxh8gx8fkqmss9c6jsm979wuv5a73lu", // wrong hrp, right checksum, short size
+			"", "address length = 39",
+			ZeroAddress},
+		{"iota1qp3mxh8gx8fkqmss9c6jsm979wuv6qpm0waw", // wrong hrp, wrong checksum, right size
+			"checksum failed: Expected 06dmq2", "checksum failed: Expected 06dmq2",
+			""},
+		{"iota1qp3mxh8gx8fkqmss9c6jsm979wuv6q06dmq2", // wrong hrp, right checksum, right size
+			"", "hrp iota and address prefix io don't match",
+			ZeroAddress},
+		{"io1qp3mxh8gx8fkqmss9c6jsm979wuv6qpm0waw6vhxt0dwzze8xxzkqanqr4d", // right hrp, wrong checksum, long size
+			"checksum failed: Expected zy3lxu", "address length = 62",
+			""},
+		{"io1qp3mxh8gx8fkqmss9c6jsm979wuv6qpm0waw6vhxt0dwzze8xxzkqzy3lxu", // right hrp, right checksum, long size
+			"", "address length = 62",
+			"io1djlzhwxdqqahhwhdxtn9hkhppvnnrptqtwf2h5"},
+		{"io1djlzhwxdqqahhwhdxtn9hkhppvnnrptqtwfh", // right hrp, wrong checksum, short size
+			"checksum failed: Expected 726csn", "address length = 39",
+			""},
+		{"io1djlzhwxdqqahhwhdxtn9hkhppvnnrp726csn", // right hrp, right checksum, short size
+			"invalid incomplete group", "address length = 39",
+			""},
+		{"io1djlzhwxdqqahhwhdxtn9hkhppvnnrptqzy3lxu", // right hrp, wrong checksum, right size
+			"checksum failed: Expected twf2h5", "checksum failed: Expected twf2h5",
+			""},
+		{"io1djlzhwxdqqahhwhdxtn9hkhppvnnrptqtwf2h5", // right hrp, right checksum, right size
+			"", "",
+			"io1djlzhwxdqqahhwhdxtn9hkhppvnnrptqtwf2h5"},
+	} {
+		a, err := FromStringLegacy(v.addr)
+		if v.errLegacy != "" {
+			r.Contains(err.Error(), v.errLegacy)
+		} else {
+			r.Equal(v.nominal, a.String())
+		}
+		a, err = FromString(v.addr)
+		if v.err != "" {
+			r.Contains(err.Error(), v.err)
+		} else {
+			r.Equal(v.nominal, a.String())
+			success++
+		}
+	}
+	r.Equal(1, success) // only 1 valid address in all tests
+}
