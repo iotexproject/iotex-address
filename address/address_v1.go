@@ -33,6 +33,9 @@ func (v *v1) FromString(encodedAddr string) (Address, error) {
 	if IsAddrV1Special(encodedAddr) {
 		return newAddrV1Special(encodedAddr), nil
 	}
+	if len(encodedAddr) != V1AddressStringLength {
+		return nil, errors.Wrapf(ErrInvalidAddr, "address length = %d, expecting 41", len(encodedAddr))
+	}
 	payload, err := v.decodeBech32(encodedAddr)
 	if err != nil {
 		return nil, err
@@ -82,9 +85,6 @@ func (v *v1) FromHex(s string) (Address, error) {
 }
 
 func (v *v1) decodeBech32(encodedAddr string) ([]byte, error) {
-	if len(encodedAddr) != V1AddressStringLength {
-		return nil, errors.Wrapf(ErrInvalidAddr, "address length = %d, expecting 41", len(encodedAddr))
-	}
 	hrp, grouped, err := bech32.Decode(encodedAddr)
 	if err != nil {
 		return nil, errors.Wrapf(ErrInvalidAddr, err.Error())

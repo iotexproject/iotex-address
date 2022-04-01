@@ -126,6 +126,7 @@ func TestSpecialAddress(t *testing.T) {
 func TestLegacyFormat(t *testing.T) {
 	r := require.New(t)
 
+	var success = 0
 	for _, v := range []struct {
 		addr           string
 		errLegacy, err string
@@ -179,6 +180,8 @@ func TestLegacyFormat(t *testing.T) {
 			r.Contains(err.Error(), v.err)
 		} else {
 			r.Equal(v.nominal, a.String())
+			success++
 		}
 	}
+	r.Equal(1, success) // only 1 valid address in all tests
 }
