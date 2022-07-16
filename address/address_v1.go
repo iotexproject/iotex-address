@@ -12,7 +12,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/iotexproject/iotex-address/address/bech32"
+	bech32 "github.com/btcsuite/btcutil/bech32"
 )
 
 // V1AddressStringLength is the length of v1 address string
