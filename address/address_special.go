@@ -45,18 +45,6 @@ func bytesToHash160(b []byte) Hash160 {
 	return h
 }
 
-// AddrV1Special is address that consists of special text
-// it is NOT a valid bech32 encoding of the 20-bytes hash
-type AddrV1Special struct {
-	addr string
-}
-
-func newAddrV1Special(s string) *AddrV1Special {
-	return &AddrV1Special{
-		addr: s,
-	}
-}
-
 // IsAddrV1Special returns true for special address
 func IsAddrV1Special(s string) bool {
 	switch s {
@@ -65,17 +53,4 @@ func IsAddrV1Special(s string) bool {
 	default:
 		return false
 	}
-}
-
-// String returns the special-text address
-func (addr *AddrV1Special) String() string { return addr.addr }
-
-// Bytes panics since it is NOT a valid bech32 encoding
-func (addr *AddrV1Special) Bytes() []byte {
-	panic("Bytes() does not apply for special address")
-}
-
-// Hex panics since it is NOT a valid bech32 encoding
-func (addr *AddrV1Special) Hex() string {
-	panic("Hex() does not apply for special address")
 }

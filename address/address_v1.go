@@ -30,9 +30,6 @@ type v1 struct {
 
 // FromString decodes an encoded address string into an address struct
 func (v *v1) FromString(encodedAddr string) (Address, error) {
-	if IsAddrV1Special(encodedAddr) {
-		return newAddrV1Special(encodedAddr), nil
-	}
 	if len(encodedAddr) != V1AddressStringLength {
 		return nil, errors.Wrapf(ErrInvalidAddr, "address length = %d, expecting 41", len(encodedAddr))
 	}
@@ -45,9 +42,6 @@ func (v *v1) FromString(encodedAddr string) (Address, error) {
 
 // FromStringLeacy decodes an encoded address string into an address struct
 func (v *v1) FromStringLegacy(encodedAddr string) (Address, error) {
-	if IsAddrV1Special(encodedAddr) {
-		return newAddrV1Special(encodedAddr), nil
-	}
 	payload, err := v.decodeBech32Legacy(encodedAddr)
 	if err != nil {
 		return nil, err
