@@ -94,15 +94,8 @@ func TestSpecialAddress(t *testing.T) {
 	} {
 		require.Equal(41, len(v))
 		require.True(IsAddrV1Special(v))
-		addr, err := _v1.FromString(v)
-		require.NoError(err)
-		require.Equal(v, addr.String())
-		require.Panics(func() {
-			addr.Bytes()
-		})
-		require.Panics(func() {
-			addr.Hex()
-		})
+		_, err := _v1.FromString(v)
+		require.ErrorIs(err, ErrInvalidAddr)
 	}
 
 	// special address for staking actions
