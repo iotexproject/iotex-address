@@ -55,7 +55,24 @@ func TestAddress(t *testing.T) {
 		addr2, err = FromHex(addrHex[:len(addrHex)-2])
 		require.NoError(err)
 		require.Equal(addr2.Hex()[4:], addrHex[2:len(addrHex)-2])
+
+		// Additional tests for 0x format addresses
+		t.Run("0x format address", func(t *testing.T) {
+			// Valid Ethereum-style 0x address
+			ethAddress := "0xba0104cD02672840Da55Bb14bebdd047Dfbfc02B"
+			addr, err := FromString(ethAddress)
+			require.NoError(err, "Expected no error for valid 0x address")
+			require.NotNil(addr, "Expected a non-nil address for valid 0x address")
+			require.Equal(strings.ToLower(ethAddress), addr.Hex(), "Expected address to match 0x format")
+
+			// Invalid 0x address (wrong length)
+			invalidEthAddress := "0xba0104cD02672840Da55Bb14bebdd047"
+			addr, err = FromString(invalidEthAddress)
+			require.Error(err, "Expected error for invalid 0x address length")
+			require.Nil(addr, "Expected nil address for invalid 0x address")
+		})
 	}
+
 	t.Run("testnet", func(t *testing.T) {
 		require.NoError(os.Setenv("IOTEX_NETWORK_TYPE", "testnet"))
 		runTest(t)

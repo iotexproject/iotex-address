@@ -9,10 +9,10 @@ package address
 import (
 	"encoding/hex"
 	"log"
-
-	"github.com/pkg/errors"
+	"strings"
 
 	"github.com/iotexproject/iotex-address/address/bech32"
+	"github.com/pkg/errors"
 )
 
 // V1AddressStringLength is the length of v1 address string
@@ -28,14 +28,29 @@ type v1 struct {
 	AddressLength int
 }
 
-// FromString decodes an encoded address string into an address struct
+// FromString decodes an encoded address string (in io1 or 0x format) into an address struct
 func (v *v1) FromString(encodedAddr string) (Address, error) {
+	// Check if the address is in Ethereum 0x format
+	if strings.HasPrefix(encodedAddr, "0x") {
+		// Check length
+		if len(encodedAddr) != 42 {
+			return nil, errors.Wrapf(ErrInvalidAddr, "invalid 0x address length: expected 42 characters, got %d", len(encodedAddr))
+		}
+		// Convert from hex (0x) format to bytes
+		return v.FromHex(encodedAddr)
+	}
+
+	// Handle special addresses in io1 format
 	if IsAddrV1Special(encodedAddr) {
 		return newAddrV1Special(encodedAddr), nil
 	}
+
+	// Validate length for io1 addresses
 	if len(encodedAddr) != V1AddressStringLength {
 		return nil, errors.Wrapf(ErrInvalidAddr, "address length = %d, expecting 41", len(encodedAddr))
 	}
+
+	// Decode the IoTeX Bech32 format address (io1)
 	payload, err := v.decodeBech32(encodedAddr)
 	if err != nil {
 		return nil, err
