@@ -12,4 +12,8 @@ func TestAddressSpecial(t *testing.T) {
 	poll, err := FromBytes(PollProtocolAddrHash[:])
 	r.NoError(err)
 	r.Equal(PollProtocol, poll.String())
+
+	rolldpos, err := FromBytes(RollDPoSProtocolAddrHash[:])
+	r.NoError(err)
+	r.Equal(RollDPoSProtocol, rolldpos.String())
 }
