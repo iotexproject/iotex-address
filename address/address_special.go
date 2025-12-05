@@ -17,12 +17,20 @@ const (
 
 	// RewardingProtocol is the rewarding protocol address
 	RewardingProtocol = "io154mvzs09vkgn0hw6gg3ayzw5w39jzp47f8py9v"
+
+	// PollProtocol is the poll protocol address
+	PollProtocol = "io1ze4hg0pvrftuj0pw90p7z6wj3wae7mdrwws6d5"
+
+	// RollDPoSProtocol is the Roll-DPoS protocol address
+	RollDPoSProtocol = "io1qsfhpcq2wywds8dpjx8suj2ytx4d4egwxzqsg3"
 )
 
 // 20-byte protocol address hash
 var (
 	StakingProtocolAddrHash   = hash160b([]byte("staking"))
 	RewardingProtocolAddrHash = hash160b([]byte("rewarding"))
+	PollProtocolAddrHash      = hash160b([]byte("poll"))
+	RollDPoSProtocolAddrHash  = hash160b([]byte("rolldpos"))
 )
 
 // hash160b returns 160-bit (20-byte) hash of input
